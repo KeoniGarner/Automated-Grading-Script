@@ -1,5 +1,6 @@
 """
-Automated Grading Script - compiles,
+Automated Grading Script - compiles, builds, and runs .cpp files then
+checks the output with a predefined output. DOES NOT SUPPORT TESTING YET
 """
 
 import os
@@ -29,6 +30,8 @@ os.chdir(studentDirectory)
 studentFiles = glob.glob("*.cpp")
 
 for file in studentFiles:
+    print("Compiling and building" + file)
+
     # compile, build, and run file
     # if file output == example output
         # write file + "     100%" + newline? to gFile
