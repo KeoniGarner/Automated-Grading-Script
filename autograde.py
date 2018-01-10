@@ -16,6 +16,8 @@ parser.add_argument("-grades", dest="gradeFile", default="gradeFile.txt",
     help="File where grades will be recorded (.txt)")
 parser.add_argument("-tests", dest="testFile",
     help="File that contains tests to run.")
+parser.add_argument("-comp", dest="compiler",
+    help="Path to specific compiler ")
 args = parser.parse_args()
 
 # set arguments to objects
@@ -26,17 +28,15 @@ tFile = args.testFile
 # change working directory to directory that is specified in the arguments
 os.chdir(studentDirectory)
 
-# create list for all student files
-studentFiles = glob.glob("*.cpp")
+# create list for all students' source files
+sourceFiles = glob.glob("*.cpp")
 
-for file in studentFiles:
-    print("Compiling and building" + file)
-
+for file in sourceFiles:
     # compile, build, and run file
     # if file output == example output
-        # write file + "     100%" + newline? to gFile
+        # write file + ":100%" + newline? to gFile
     # else
-        # write file + "       0%" + newline? to gFile
+        # write file + ":0%" + newline? to gFile
 
 # close grade file
 gFile.close()
