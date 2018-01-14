@@ -12,11 +12,11 @@ import argparse as arguments
 PARSER = arguments.ArgumentParser(description='Automated Grading Script.')
 PARSER.add_argument("-dir", dest="fileDirectory", default="./Example Files",
                     help="Directory that holds all of the students' files.")
-PARSER.add_argument("-grades", dest="gradeFile", default="gradeFile.txt",
+PARSER.add_argument("-grades", dest="gradeFile", default="./gradeFile.txt",
                     help="File where grades will be recorded (.txt)")
-PARSER.add_argument("-tests", dest="testFile", default="testFile.txt",
+PARSER.add_argument("-tests", dest="testFile", default="../testFile.txt",
                     help="File that contains tests to run.")
-PARSER.add_argument("-comp", dest="compiler", default="g++.exe",
+PARSER.add_argument("-comp", dest="compiler", default="..\\..\\..\\..\\Downloads\\MinGW\\bin\\g++.exe",
                     help="Path to specific compiler ")
 ARGS = PARSER.parse_args()
 
@@ -31,7 +31,7 @@ def main():
     os.chdir(STUDENTDIRECTORY)
     get_txt_files()
 
-    text_files = glob.glob(".txt")
+    text_files = glob.glob("*.txt")
     for out_file in text_files:
         # call to function to do the dirty work
         compare_text_files(TESTFILE, out_file)
@@ -54,14 +54,14 @@ def compile_and_run_cpp_files(cpp_file):
     txt_file = cpp_file.split(".cpp")[0] + "-output.txt"
     comp_args = [CPPCOMPILER, "-Wall", cpp_file, "-o", exe_file]
 
-    # compile and build file as "a.exe"
+    # compile and build file
     comp_file = subprocess.Popen(comp_args, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
     # wait for file to open
     comp_file.wait()
 
     # run executable to get output
-    comp_file = subprocess.Popen([os.path.join(os.curdir, exe_file)],
+    comp_file = subprocess.Popen([os.path.join(os.getcwd(), exe_file)],
                                  stdout=subprocess.PIPE, stderr=subprocess.PIPE,
                                  universal_newlines=True)  # needed to receive strings
 
@@ -92,5 +92,7 @@ def compare_text_files(test, actual):
     t_file.close()
     a_file.close()
 
+
+main()
 # print progress to console along with average grade
 print("Success!")
