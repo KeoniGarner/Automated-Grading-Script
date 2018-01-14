@@ -14,7 +14,7 @@ PARSER.add_argument("-dir", dest="fileDirectory", default="./Example Files",
                     help="Directory that holds all of the students' files.")
 PARSER.add_argument("-grades", dest="gradeFile", default="gradeFile.txt",
                     help="File where grades will be recorded (.txt)")
-PARSER.add_argument("-tests", dest="testFile", default="testFile.txt"
+PARSER.add_argument("-tests", dest="testFile", default="testFile.txt",
                     help="File that contains tests to run.")
 PARSER.add_argument("-comp", dest="compiler", default="g++.exe",
                     help="Path to specific compiler ")
