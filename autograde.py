@@ -9,51 +9,63 @@ import glob
 import argparse as arguments
 
 # setup arguments
-parser = arguments.ArgumentParser(description='Automated Grading Script.')
-parser.add_argument("-dir", dest="fileDirectory", default="./Example Files",
-    help="Directory that holds all of the students' files.")
-parser.add_argument("-grades", dest="gradeFile", default="gradeFile.txt",
-    help="File where grades will be recorded (.txt)")
-parser.add_argument("-tests", dest="testFile",
-    help="File that contains tests to run.")
-parser.add_argument("-comp", dest="compiler", 
-    default="C:\\Users\\Keoni Garner\\Downloads\\MinGW\\bin\\g++.exe",
-    help="Path to specific compiler ")
-args = parser.parse_args()
+PARSER = arguments.ArgumentParser(description='Automated Grading Script.')
+PARSER.add_argument("-dir", dest="fileDirectory", default="./Example Files",
+                    help="Directory that holds all of the students' files.")
+PARSER.add_argument("-grades", dest="gradeFile", default="gradeFile.txt",
+                    help="File where grades will be recorded (.txt)")
+PARSER.add_argument("-tests", dest="testFile",
+                    help="File that contains tests to run.")
+PARSER.add_argument("-comp", dest="compiler",
+                    default="C:\\Users\\Keoni Garner\\Downloads\\MinGW\\bin\\g++.exe",
+                    help="Path to specific compiler ")
+ARGS = PARSER.parse_args()
 
 # set arguments to objects
-studentDirectory = args.fileDirectory
-gFile = open(args.gradeFile, mode="w")
-tFile = args.testFile
-cppCompiler = args.compiler
+STUDENTDIRECTORY = ARGS.fileDirectory
+GRADEFILE = open(ARGS.gradeFile, mode="w")
+TESTFILE = ARGS.testFile
+CPPCOMPILER = ARGS.compiler
 
 # change working directory to directory that is specified in the arguments
-os.chdir(studentDirectory)
+os.chdir(STUDENTDIRECTORY)
 
 # create list for all students' source files
-sourceFiles = glob.glob("*.cpp")
+SOURCEFILES = glob.glob("*.cpp")
 
-for file in sourceFiles:
+
+# not happy with "compFile" as a variable name
+for file in SOURCEFILES:
+    # string manipulation and arguments at the beginning of "for" loop for clarity
+    exeFile = file.split(".cpp")[0] + ".exe"
+    txtFile = file.split(".cpp")[0] + "-output.txt"
+    compArgs = [CPPCOMPILER, "-Wall", file, "-o", exeFile]
+    
     # compile and build file as "a.exe"
-    compFile = subprocess.Popen([cppCompiler, file], 
-        stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    compFile = subprocess.Popen(compArgs,
+                                stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
-    # run "a.exe" to get output and write to file.
-    compFile = subprocess.Popen(["./a.exe"], 
-        stdout=subprocess.PIPE, stderr=subprocess.PIPE, 
-        universal_newlines = True) # needed to receive strings
+    # wait for file to open
+    compFile.wait()
 
-    output = open((file + "-output.txt"), "w")
+    # run executable to get output
+    compFile = subprocess.Popen([os.path.join(os.curdir, exeFile)],
+                                stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+                                universal_newlines=True)  # needed to receive strings
+
+    # see above
+    compFile.wait()
+
+    # write to ".txt" file
+    output = open(txtFile, "w")
     output.write(compFile.stdout.read())
 
     compFile = ""
-    os.remove("a.exe")
     output.close
-    
 
 
 # close grade file
-gFile.close()
+GRADEFILE.close()
 
 # print progress to console along with average grade
 print("Success!")
