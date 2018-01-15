@@ -75,18 +75,26 @@ def compile_and_run_cpp_files(cpp_file):
     # empty variables
     output.close()
     comp_file = ""
+    os.remove(os.path.join(os.getcwd(), exe_file))
 
 def compare_text_files(test, actual):
     # open files to be compared
     t_file = open(test, "r")
     a_file = open(actual, "r")
-
+    test_lines = t_file.readlines()
+    actual_lines = a_file.readlines()
     # compare the output of both files
-    if t_file.read() != a_file.read():
-        GRADEFILE.write(a_file.name + "-----Expected: " + t_file.read() + "-----Got: "
-                        + a_file.read())
+    if test_lines != actual_lines:
+        # format for finding discrepancies between both files
+        GRADEFILE.write(a_file.name.split("-output.txt")[0] + "-----0%\n")
+        GRADEFILE.write("     -----Expected:\n")
+        for t_line in test_lines:
+            GRADEFILE.write("           " + t_line + "\n")
+        GRADEFILE.write("     -----Got:\n")
+        for a_line in actual_lines:
+            GRADEFILE.write("           " + a_line + "\n")
     else:
-        GRADEFILE.write(a_file.name + "-----100%")
+        GRADEFILE.write(a_file.name.split("-output.txt")[0] + "-----100%\n")
 
     # empty variables
     t_file.close()
